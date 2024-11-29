@@ -14,6 +14,7 @@ from io import BytesIO
 #! modules for speech input
 import speech_recognition as sr
 import pyttsx3
+import threading
 
 # Load environment variables
 load_dotenv()
@@ -31,8 +32,12 @@ engine = pyttsx3.init()
 
 # Function to convert text to speech
 def speak(text):
-    engine.say(text)
-    engine.runAndWait()
+    def speak_async():
+        engine.say(text)
+        engine.runAndWait()
+
+    # Run the speak function in a separate thread
+    threading.Thread(target=speak_async).start()
 
 # 1. File Upload
 pdf_file = st.file_uploader("Upload your PDF file", type="pdf")
